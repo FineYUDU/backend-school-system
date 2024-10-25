@@ -21,7 +21,7 @@ import { CommonModule } from './common/common.module';
     }),
     AuthModule,
     SeedModule,
-    CommonModule
+    CommonModule,
   ],
 })
 export class AppModule {}

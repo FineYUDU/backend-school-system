@@ -57,6 +57,7 @@ export class AuthService {
     };
   }
 
+
   
   async login(loginUserDto: LoginUserDto): Promise<LoginResponse> {
 
@@ -125,6 +126,17 @@ export class AuthService {
       ...user,
       token: this.getJwToken({id:user.id})
     };
+  }
+
+  async remove(id:string) {
+    const user = await this.userRepository.findOneBy({id});
+
+    if(!user) throw new NotFoundException(`User with ${id} not found`)
+
+    await this.userRepository.remove(user);
+
+    return this.userRepository.find();
+
   }
 
 

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Query, UseGuards, Request, Patch, Delete } from '@nestjs/common';
 
 import { Auth, GetUser } from './decorators';
 
@@ -18,7 +18,6 @@ import { LoginResponse } from './interfaces/login-response.interface';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards( AuthGuard )   
   @Auth(ValidRoles.superUser)
   @Get()
   findAll(@Query() paginationDto : PaginationDto ) {
@@ -46,6 +45,12 @@ export class AuthController {
   registerUser(@Body() registerUserDto: RegisterUserDto) {
      return this.authService.register( registerUserDto );
   }
+  
+  @Auth(ValidRoles.superUser)
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.authService.remove(id);
+  }
 
   @Post('login')
   loginUser(@Body() loginUserDto: LoginUserDto) {
@@ -60,14 +65,4 @@ export class AuthController {
    return this.authService.checkAuthStatus( user )
   }
 
-  @Get('private3')
-  @Auth(ValidRoles.superUser)
-  privateRoute3(
-   @GetUser() user: User,
-  ){
-   return {
-      ok:true,
-      user,
-   }
-  }
 }
